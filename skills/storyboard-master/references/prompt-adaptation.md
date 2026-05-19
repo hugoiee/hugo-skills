@@ -1,29 +1,32 @@
-# AIGC 视频工具 Prompt 适配指南
+# Seedance 2.0 Prompt 适配与后期工作流
 
-> 用法：阶段 7「Prompt 输出」中需要根据用户选择的工具调整 prompt 语法时调取此文件。
-> 这是 seedance-storyboard skill 的功能扩展和替代。
-
----
-
-## 工具速查表
-
-| 工具 | 出品方 | 强项 | 短板 | Prompt 语言偏好 |
-|------|--------|------|------|---------------|
-| **Seedance 2.0** | 豆包/字节 | 中文友好、角色一致性、物理理解 | 写实人脸审核严 | 中文 / 英文均可 |
-| **Sora 2** | OpenAI | 物理表现最强、长镜头稳 | 价格贵、中文支持弱 | 英文优先 |
-| **Kling 2.1** | 快手可灵 | 国产强模型、性价比高、运镜灵活 | 极端写实弱于 Sora | 中文 / 英文均可 |
-| **Runway Gen-4** | Runway | 运镜参数化、角色一致性强 | 静态画面感、动作弱 | 英文 |
-| **Veo 3** | Google | 物理顶级、音频同步生成 | 价格最贵、地区限制 | 英文优先 |
-| **Hailuo 02** | MiniMax | 动态丰富、人物表演好 | 一致性较弱 | 中文 / 英文均可 |
-| **Pika 2.2** | Pika Labs | 创意特效、风格化强 | 写实弱 | 英文 |
-
-**注：以上信息为 2026 年初的状态，工具迭代快，使用前建议 web_search 验证最新能力。**
+> 用法：阶段 7「Prompt 输出」中需要详细 Seedance 写法、运镜、抽卡心法、后期流程时调取此文件。
 
 ---
 
-## 通用 Prompt 黄金结构
+## Seedance 2.0 模型简介
 
-不管哪个工具，这个结构都适用：
+**出品方：** 字节跳动 / 豆包
+
+**核心定位：** 中文友好的高一致性 AI 视频生成模型。
+
+**能力速查：**
+
+| 维度 | 说明 |
+|------|------|
+| Prompt 语言 | 中文 / 英文均可，**中文是一等公民** |
+| 单段时长 | 5–10 秒 |
+| 帧率 | 24fps |
+| 默认画幅 | 16:9（2.39:1 需后期裁切） |
+| 强项 | 中文语义、角色一致性、物理理解、运镜可控 |
+| 短板 | 写实人脸审核严、长镜头需分段拼接 |
+| 入口 | 文生视频 / 首尾帧 / 全能参考（多图+文本，推荐） / 视频延长 |
+
+**注：以上为 2026 年初状态，使用前可 web_search 验证最新能力。**
+
+---
+
+## Prompt 黄金结构
 
 ```
 [镜头景别] + [主体描述（含角色参考）] + [主体动作]
@@ -33,9 +36,9 @@
 
 **通用规则：**
 - 短句 + 逗号分隔，不要写散文
-- 关键元素重复 2-3 次（AI 会强化关注）
+- 关键元素重复 2-3 次（Seedance 会强化关注）
 - 负面提示词每镜都加
-- 角色参考用工具支持的语法（@图片1、`--cref`、reference image）
+- 角色参考用 `@图片1` 引用上传素材
 
 ---
 
@@ -96,242 +99,85 @@
 
 ---
 
-## Sora 2 适配
+## 支持的运镜方式
 
-### 提示词偏好
+Seedance 对中文运镜术语理解精准，直接用即可。
 
-- 英文优先（中文支持有但效果不如英文）
-- 喜欢"自然语言描述"，可以写一小段散文
-- 对物理规律理解极强（光、水、动力学）
-- 对镜头运动术语理解精准（dolly、pan、tilt、tracking）
+### 运镜大全
 
-### 提示词模板
+| 类别 | 运镜方式 | Prompt 写法 | 适用场景 |
+|------|---------|-----------|---------|
+| **固定** | 固定机位 | "镜头完全静止" / "固定机位" | 留白、人物特写、氛围镜 |
+| **推拉** | 推镜头 | "镜头缓慢推近" / "快速推进" | 强调主体、情绪聚焦 |
+| **推拉** | 拉镜头 | "镜头缓慢拉远" | 揭示环境、落幕感 |
+| **摇** | 水平摇 | "镜头从左向右摇" / "横摇" | 展示空间、跟随视线 |
+| **摇** | 垂直摇 | "镜头向上摇" / "俯仰摇" | 揭示高度、仰望震撼 |
+| **平移** | 水平平移 | "镜头水平平移" / "侧向移动" | 追随主体、横向叙事 |
+| **跟随** | 跟拍 | "镜头跟随主体" / "跟拍" | 角色行进、动作戏 |
+| **跟随** | 环绕 | "镜头围绕主体环绕一周" | 强调主体存在感 |
+| **升降** | 升镜头 | "镜头上升" / "升降机上升" | 揭示规模、空灵感 |
+| **升降** | 降镜头 | "镜头下降" | 沉重感、压迫感 |
+| **复合** | 推 + 摇 | "镜头一边推近一边向左摇" | 复杂情绪转场 |
+| **复合** | 移 + 跟 | "侧向平移跟拍主体" | 公路片、追逐戏 |
+| **视角** | 第一人称 | "POV 主观镜头" | 沉浸感 |
+| **视角** | 俯视 / 仰视 | "俯拍视角" / "仰拍视角" | 权力关系、心理张力 |
+| **特殊** | 手持感 | "轻微手持晃动" | 纪实感、紧张感 |
+| **特殊** | 希区柯克变焦 | "镜头推近的同时背景变焦拉远（dolly zoom）" | 心理冲击瞬间 |
 
-```
-[Shot type] of [subject] [action] in [environment].
-[Detailed lighting description].
-[Color palette].
-Camera [movement description].
-[Aspect ratio], [style references], [film stock or lens reference].
-```
+### 运动幅度参考
 
-### 实例（与上面同一镜头）
+Seedance 对"速度词"敏感，描述运镜时务必加：
 
-```
-Medium shot, static camera. A lone wandering swordsman kneels on red 
-desert sand, his long black hair soaked and dripping, dark green 
-blood-stained robe torn by sandstorm winds.
+| 速度 | 用词 | 适合 |
+|------|------|------|
+| 极静 | 完全静止 / 凝固 | 留白、氛围、特写 |
+| 缓慢 | 缓慢推 / 极缓平移 | 文艺、史诗、压抑 |
+| 中速 | 中速跟拍 / 平稳推进 | 常规叙事 |
+| 快速 | 快速推 / 急速跟拍 | 动作、紧张 |
+| 极快 | 急推 / 闪切 | 高潮、冲击 |
 
-Behind him: a massive rust-red setting sun (deep blood red, NOT 
-orange-yellow), heavy sand particles drifting through the air.
+### 运镜书写要点
 
-Backlit silhouette composition. Desaturated colors with rust red 
-and iron grey dominant. Static camera, no movement.
-
-2.39:1 widescreen anamorphic. Shot on Arri Alexa with anamorphic lens, 
-35mm film grain. Roger Deakins cinematography style.
-```
-
-### Sora 独有的优势用法
-
-**长镜头运动描述：**
-```
-"Camera slowly dollies forward from 20 meters to 5 meters over 8 seconds,
-maintaining the subject in the lower-right third of the frame"
-```
-
-**物理细节描述：**
-```
-"Sand particles realistically affected by wind direction from camera left to right.
-The robe fabric responds to wind with natural cloth simulation."
-```
-
-### 注意事项
-
-- 不接受 `@image` 语法，参考图通过 UI 上传
-- 角色一致性靠 prompt 描述 + reference image
-- 价格按秒计费，5 秒以下尽量优化
+- 单一镜头只用 1–2 个运镜，超过会乱
+- 起止位置可描述：「从全景缓慢推至面部特写」
+- 与节奏曲线对应：静态镜对应「固定机位」、崩点对应「快速推进 + 手持晃动」
+- 写实题材避免过度复杂运镜——固定机位 + 微小推拉最稳
 
 ---
 
-## Kling 2.1 适配
+## 帧率与时长
 
-### 提示词偏好
-
-- 中英文均可
-- 喜欢"短句 + 逗号"，类似 Seedance
-- 对"镜头景别"理解精准
-- 支持参考图（"参考图像"功能）
-
-### 提示词模板
-
-```
-[景别] [主体描述]
-[主体动作]
-[环境]
-[光线 + 色调]
-[镜头运动]
-[风格关键词]
-```
-
-### Kling 独有特点
-
-- **运动幅度参数**（可调，1-10）：用于控制画面动态强弱
-- **专业模式**：支持负面提示词、运动笔刷等
-- **首尾帧**：支持指定开始和结束画面
-
-### 实例
-
-```
-中景固定机位
-苍白男子单膝跪地，黑发湿润垂地，破损墨绿长袍
-风沙吹拂衣摆，身侧插满断剑
-血红色沙漠，铁锈红落日剪影，漫天风沙
-逆光剪影构图，低饱和度，墨红色调
-镜头完全静止
-2.39:1 宽银幕，电影感，Roger Deakins 摄影风格
-```
-
-### 运动幅度建议
-
-| 镜头类型 | 推荐运动幅度 |
-|---------|------------|
-| 固定机位 | 1-2 |
-| 缓慢推拉 | 3-4 |
-| 中速跟拍 | 5-6 |
-| 快速运镜 | 7-8 |
-| 极端动作 | 9-10 |
+| 参数 | Seedance 2.0 |
+|------|--------------|
+| 单次生成最长 | 5–10s |
+| 帧率 | 24fps |
+| 超时长 | 分段生成后期拼接 |
 
 ---
 
-## Runway Gen-4 适配
+## 抽卡心法
 
-### 提示词偏好
-
-- 英文为主
-- 强调"reference image"逻辑
-- 支持运镜参数（在 UI 里调，不是 prompt）
-- 喜欢简洁的英文描述
-
-### Runway 独有功能
-
-- **Camera Motion**：通过参数（Pan、Tilt、Zoom、Roll、Tracking）控制运镜
-- **Motion Brush**：可以画出运动的区域和方向
-- **Director Mode**：详细控制镜头参数
-
-### 提示词模板
-
-```
-[Shot type] of [subject], [action].
-[Environment].
-[Lighting].
-[Aspect ratio], [style].
-```
-
-**注：复杂的镜头运动通过 UI 参数控制，不写在 prompt 里。**
-
-### 实例
-
-```
-Medium static shot of a lone swordsman kneeling on red desert sand,
-long black hair wet and tangled, dark green torn robe stained with blood.
-Behind him: massive rust-red setting sun, sand particles drifting.
-Backlit silhouette, desaturated rust and grey palette.
-2.39:1 widescreen, cinematic anamorphic, Roger Deakins style.
-```
-
-然后在 UI 里设置：
-- Camera Motion: None
-- Motion Strength: 2/10
+- 一个镜头**至少抽 3-5 次**取最佳
+- 关键镜头（面部特写、复杂动作）**抽 15-30 次**
+- **记录种子和参数**，好的镜头要能复现
+- **每个镜头多生 2 个备选版本**，剪辑时会感谢自己
 
 ---
 
-## Veo 3 适配
-
-### 提示词偏好
-
-- 英文优先
-- 自然语言长描述（类似 Sora）
-- 物理规律最强
-- **可同时生成音频**（这是 Veo 3 的杀手锏）
-
-### Veo 独有优势
-
-- 自动生成与画面同步的音效（脚步、环境音、人声等）
-- 物理表现最接近真实
-
-### 是否用音频生成？
-
-虽然 Veo 3 能生成音频，但**对于多镜头剪辑的宣传片，依然建议关闭**——
-理由同 Seedance：音频绑定视频，后期剪辑会被锁死。
-
-只在做"单镜头独立短片"时开启。
-
-### 实例
-
-同 Sora 实例的英文 prompt，加上：
-```
-Audio: minimal wind sound, distant low rumble, no music, no dialogue.
-```
-
----
-
-## Hailuo 02 适配
-
-### 提示词偏好
-
-- 中英文均可
-- 对人物表演（表情、微动作）理解最好
-- 喜欢"动作描写"密集的 prompt
-
-### Hailuo 的优势
-
-- 微表情、眼神变化、嘴唇动作生成最自然
-- 适合"角色表演为主"的镜头
-
-### 注意
-
-- 一致性较弱，不要用于跨多镜头的角色锁定
-- 适合插入"单一表演特写"镜头
-
----
-
-## Pika 2.2 适配
-
-### 提示词偏好
-
-- 英文为主
-- 喜欢"风格化关键词"
-- 适合非写实风格
-
-### Pika 适合场景
-
-- 风格化短片（漫画、油画、像素风）
-- 创意特效（变形、转换、过渡）
-
-### 不适合
-
-- 写实电影感（用 Sora / Veo / Seedance）
-- 角色一致性强的多镜头叙事
-
----
-
-## 跨工具通用要点
-
-### 1. 角色一致性的核心策略
-
-不管什么工具，角色一致性都靠：
+## 角色一致性核心策略
 
 ```
 1. 第一步：建立"角色锚点图"（Midjourney/Flux 生成的高质量参考图）
-2. 第二步：在视频生成时把锚点图作为参考输入
+2. 第二步：在 Seedance 生成时把锚点图用 @图片1 引入
 3. 第三步：在 prompt 里反复强调角色特征
 4. 第四步：每个生成成功的镜头保存最后一帧作为下一镜的"二级参考"
 ```
 
 **最关键：所有镜头都用同一张角色锚点图。**
 
-### 2. 负面提示词的通用模板
+---
+
+## 负面提示词模板
 
 ```
 （按风格调整）
@@ -340,47 +186,22 @@ Audio: minimal wind sound, distant low rumble, no music, no dialogue.
 水印、文字、字幕（除非需要）
 ```
 
-英文版：
-```
-low quality, blurry, deformed, distorted, mutated face,
-extra limbs, wrong fingers, character inconsistency,
-style break, oversaturated, cartoon style (if realistic),
-watermark, text, subtitles
-```
+---
 
-### 3. 画幅控制
+## 画幅控制
 
 | 画幅 | Prompt 关键词 |
 |------|-------------|
-| 1:1 | "1:1 square composition" |
-| 16:9 | "16:9 widescreen" |
-| 9:16 | "9:16 vertical / portrait" |
-| 2.39:1 | "2.39:1 anamorphic widescreen" + "主体置于画面中部，便于后期裁切" |
+| 1:1 | "1:1 正方形构图" |
+| 16:9 | "16:9 宽屏" |
+| 9:16 | "9:16 竖屏 / 手机竖版" |
+| 2.39:1 | "2.39:1 anamorphic 宽银幕" + "主体置于画面中部，便于后期裁切" |
 
-### 4. 帧率与时长
+---
 
-| 工具 | 单次生成最长 | 帧率 |
-|------|------------|------|
-| Seedance 2.0 | 5-10s | 24fps |
-| Sora 2 | 20s | 24fps |
-| Kling 2.1 | 10s | 30fps |
-| Runway Gen-4 | 16s | 24fps |
-| Veo 3 | 8s | 24fps |
-| Hailuo 02 | 10s | 25fps |
+## 关于音频
 
-**注：超过这个时长建议分段生成 + 后期拼接。**
-
-### 5. 抽卡心法
-
-不管什么工具：
-- 一个镜头**至少抽 3-5 次**取最佳
-- 关键镜头（面部特写、复杂动作）**抽 15-30 次**
-- **记录种子和参数**，好的镜头要能复现
-- **每个镜头多生 2 个备选版本**，剪辑时会感谢自己
-
-### 6. 关于音频
-
-**通用规则：抽卡阶段全程关闭 AI 视频的音频生成。**
+**铁律：抽卡阶段全程关闭 Seedance 的音频生成。**
 
 理由：
 - AI 音频质量达不到电影级
@@ -389,50 +210,23 @@ watermark, text, subtitles
 
 正确流程：
 ```
-1. 视频抽卡（无音频）
+1. Seedance 视频抽卡（无音频）
 2. 剪辑成片
 3. Suno AI 生成主音乐
 4. freesound / Splice / Epidemic Sound 加音效
 5. DaVinci Resolve Fairlight 混音
 ```
 
-唯一例外：单镜头作品（不剪辑）可以试 Veo 3 的同步音频。
-
----
-
-## 工具选择决策树
-
-```
-你的核心需求是？
-├─ 中文项目 / 国内访问
-│   ├─ 强角色一致性 → Seedance 2.0
-│   ├─ 灵活运镜 → Kling 2.1
-│   └─ 人物表演 → Hailuo 02
-│
-├─ 全球项目 / 不限地区
-│   ├─ 最强物理表现 → Veo 3 / Sora 2
-│   ├─ 运镜精确控制 → Runway Gen-4
-│   └─ 风格化特效 → Pika 2.2
-│
-└─ 预算敏感
-    ├─ 性价比首选 → Kling 2.1
-    └─ 免费试用 → Pika / Runway 试用版
-```
-
 ---
 
 ## 完整制作流程的工具组合
 
-实际项目通常**多工具组合**，不只用一个：
+实际项目通常**多工具组合**，Seedance 只负责视频生成环节：
 
 ```
 角色 / 概念图生成：Midjourney / Flux
        ↓
-视频生成：Seedance / Kling / Sora / Veo（按需选）
-       ↓
-关键单镜表演：Hailuo（如需）
-       ↓
-特效插入：Pika（如需）
+视频生成：Seedance 2.0
        ↓
 音乐生成：Suno AI
        ↓
