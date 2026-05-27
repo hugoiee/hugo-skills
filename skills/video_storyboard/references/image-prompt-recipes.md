@@ -4,6 +4,12 @@ SKILL.md Step 3 调用本文件。本文件只讲"如何让 ChatGPT 网页出一
 
 ---
 
+## ⚠️ 单册 ≤ 12 镜（硬限制）
+
+ChatGPT-Images 2 单次对话最多承载 12 镜。超过 12 镜的项目必须**分册**：每册独立开一个新对话，每册开头都要重新上传 `character-ref.png` 并复述视觉铁律与全局负面词。切割点优先选幕与幕之间、场景与场景之间，不要从连续动作中间切。详见 SKILL.md Step 3 的"12 镜分册硬限制"。
+
+---
+
 ## 写作要点
 
 1. **中英文混写没问题**——ChatGPT-Images 2 对中文理解到位，但**光学术语、风格词、画幅术语用英文更准**（如 `anamorphic`, `chiaroscuro`, `35mm`, `bokeh`, `volumetric light`）。
