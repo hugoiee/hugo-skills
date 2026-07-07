@@ -1,5 +1,5 @@
 ---
-name: AIGC_MJ_translate
+name: aigc-mj-translate
 description: 把中文创意/提示词翻译成精准、符合 Midjourney 规范的英文提示词。不直译字面，而是按"主体+媒介+环境+光照+色彩+情绪+构图+风格"八要素拆解，用专业视觉术语翻译，再智能补上合法参数（--ar / --v / --niji 等），产出可直接出图的成品 prompt + 简要说明。当用户说"把这段中文转成 MJ 提示词""帮我写 Midjourney 英文 prompt""这个画面用 midjourney 怎么写""翻译成 mj 提示词""优化我的 MJ prompt""我想画 XX 给我个 midjourney 咒语"，或扔来一段中文画面描述要去 Midjourney 出图时调用。也适用于已有英文 prompt 但想让它更规范、更精准。不适用于非 Midjourney 的纯文本翻译；其它出图工具（Stable Diffusion / DALL·E / 即梦等）的提示词语法不同，本 skill 只针对 Midjourney（如需可另建）。
 ---
 
