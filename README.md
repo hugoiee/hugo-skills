@@ -4,13 +4,28 @@ hugo 维护的 Claude Code / Claude.ai Skills 仓库。开箱即用，clone 下�
 
 ## 仓库里有什么
 
+### AIGC 播客视频（两条写稿 → 出片流水线）
+
+单人和双人各是一条「先写稿、再出片」的流水线：`*-writing` 用"小林说式"方法论把选题写成定稿/对话稿，产出的稿子直接喂给同名 `*-script` 切段并生成图生视频 prompt。
+
 | Skill | 适用场景 |
 |-------|---------|
-| [video_storyboard](skills/video_storyboard/) | 想用 AIGC 做视频但没思路 / 要把 IP 改成宣传片 / 需要一份可执行的分镜手册时调用。覆盖项目定位 → 调研 → 创意收敛 → 视觉锁定 → 分镜 → 迭代 → Prompt 输出全流程，工具中立（Seedance / Sora / Kling / Runway / Veo 通用） |
-| [AIGC_Podcast_Script](skills/aigc-podcast-double-script/) | 做**双人 AI 对话播客**（两人对谈/数字人对谈视频）时调用。把剪辑决策前置到写稿之后：从 A/B 对话稿直接算出一张精确到秒的剪辑决策表（cut plan / EDL）+ 反应镜头素材库需求清单 + 每个片段的生成 prompt，让最后在剪映/CapCut 里的拼接退化成照表拼装。核心机制是"说话片段音画一体进主轨、静音反应片段进上层覆盖轨做盖画面不盖声音的 cutaway 叠加"，并给出可判定的反应镜头触发规则与（可选）pyJianYingDraft 一键生成剪映草稿。针对即梦 / 可灵 / Vidu + 剪映。与 video_storyboard 分工：后者是通用 / IP 分镜，单人口播见 AIGC_Solo_Podcast，本 skill 专攻双人对话的剪辑前置 |
-| [AIGC_Solo_Podcast](skills/aigc-podcast-solo-script/) | 做**单人口播视频**（一个人对着镜头讲的财经/资讯/观点口播、单人播客、数字人单口播报）时调用。把手写好的口播稿前置切成偏 10–15s 的段、按念出来的字数（数字按读法）估时并卡死总时长（如 ≤90s），锁一张单人固定机位首帧 host_solo.png，逐段产出**可直接复制**的图生视频说话 prompt。核心解决单人口播两大坑：镜头切太碎、以及台词短但生成时长设太长导致人物"傻坐着发呆"（修法：时长=台词实长 + prompt 写"连贯讲话不发呆" + 合并镜头）。针对即梦/可灵/Vidu。与 AIGC_Podcast_Script 分工：那个是双人对话播客（带反应镜头+剪辑决策表），本 skill 是单人口播（无反应镜头，重在切段+卡时长+防发呆+逐段干净 prompt） |
-| [AIGC_MJ_translate](skills/aigc-mj-translate/) | 把中文创意/提示词翻译成精准、符合 Midjourney 规范的英文 prompt 时调用。按"解析意图（缺信息先反问）→ 八要素拆解 → 专业术语选词 → 智能补参数 → 成品 + 说明"五步，产出可直接出图的 prompt。内置 MJ 参数速查与中→英视觉术语词表，默认 V8.1。专用于 Midjourney |
-| [AIGC_Suno_Music](skills/aigc-suno-translate/) | 用 Suno 做歌时调用。把一句音乐创意/主题变成可直接粘贴进 Suno 的成品——英文 Style 提示词（≤240 字符）+ 带 [Verse]/[Chorus] 结构标签的歌词（≤3000 字符）+ 标题 + 调参建议。按"厘清意图 → 写 Style → 写结构化歌词 → 选模式/版本 → 调参迭代"五步，只锚定一个主流派避免风格打架；Style 用英文、歌词随用户语言。内置音乐术语中→英词库、各流派示例提示词、meta tag 全表与迭代工具速查。专用于 Suno |
+| [aigc-podcast-solo-writing](skills/aigc-podcast-solo-writing/) | 写**单人口播文案**时调用。用"小林说式"方法论把一个选题按"选题打分 → 结构选型 → 悬念地图 → 开场 60 秒 → 正文填充 → 口语化 → 收尾"产出可直接朗读的口播定稿。面向知识解释类（财经/科技/历史/社会事件"把复杂东西讲明白"）。定稿可直接作为下游 `aigc-podcast-solo-script` 的输入。不适用于双人对谈稿、带货、vlog/测评/情绪共鸣类 |
+| [aigc-podcast-solo-script](skills/aigc-podcast-solo-script/) | 把写好的**单人口播稿做成视频**时调用。前置切成偏 10–15s 的段（4–15s 内）、按念出字数（数字按读法）估时卡死总时长（如 ≤90s），锁一张固定机位首帧 host_solo.png，逐段产出**可直接复制**的图生视频说话 prompt。专治单人口播两大坑：镜头切太碎、以及台词短但生成时长设太长导致人物"傻坐着发呆"（修法：时长=台词实长 + "连贯讲话不发呆" + 合并镜头）。针对即梦/可灵/Vidu |
+| [aigc-podcast-double-writing](skills/aigc-podcast-double-writing/) | 写**双人对谈稿**时调用。用"小林说式"方法论把单人爆款技巧拆成两个声部（自问自答→A 问 B 答、替观众提问→A 的人设、虚拟对白→真实交锋、大悬念两人共同揭开），按"选题打分 → 双人设定 → 结构与悬念地图 → 逐块写台词 → 口语化"产出带 T1/T3/T4 反应镜头触发点备注的六字段 A/B 行表。行表可直接作为下游 `aigc-podcast-double-script` 的输入 |
+| [aigc-podcast-double-script](skills/aigc-podcast-double-script/) | 把**双人对话稿做成视频 + 剪辑决策表**时调用。生成双人/A 单人/B 单人三视图固定机位首帧、逐人图生视频出音画一体说话片段，把剪辑决策前置成一张精确到秒的剪辑决策表（cut plan / EDL）+ 反应镜头素材库需求清单，让剪映/CapCut 里的拼接退化成照表拼装。核心机制是"说话片段音画一体进主轨、静音反应片段进上层覆盖轨做盖画面不盖声音的 cutaway 叠加"，逐行给出起点/时长/用哪条反应片段/转场，并可选 pyJianYingDraft 一键生成剪映草稿。针对即梦/可灵/Vidu + 剪映 |
+
+### 出图 / 出歌
+
+| Skill | 适用场景 |
+|-------|---------|
+| [aigc-mj-translate](skills/aigc-mj-translate/) | 把中文创意/提示词翻译成精准、符合 Midjourney 规范的英文 prompt 时调用。按"解析意图（缺信息先反问）→ 八要素拆解 → 专业术语选词 → 智能补参数 → 成品 + 说明"五步，产出可直接出图的 prompt。内置 MJ 参数速查与中→英视觉术语词表，默认 V8.1。专用于 Midjourney |
+| [aigc-suno-translate](skills/aigc-suno-translate/) | 用 Suno 做歌时调用。把一句音乐创意/主题变成可直接粘贴进 Suno 的成品——英文 Style 提示词（≤240 字符）+ 带 [Verse]/[Chorus] 结构标签的歌词（≤3000 字符）+ 标题 + 调参建议。按"厘清意图 → 写 Style → 写结构化歌词 → 选模式/版本 → 调参迭代"五步，只锚定一个主流派避免风格打架；Style 用英文、歌词随用户语言。专用于 Suno |
+
+### 编程
+
+| Skill | 适用场景 |
+|-------|---------|
 | [coding_new_project](skills/coding-new-project/) | 从零搭新项目时调用。在空目录里按"技术选型 → 项目骨架 → 工具链配置 → 首个页面 + CLAUDE.md"四步法，让 AI 干体力活（初始化、装依赖、写配置、搭样板），你做脑力活（技术选型、架构决策、目录规划），先求可运行、可解释、可继续扩展，不一步到位堆功能。工具中立 |
 | [coding_new_feat](skills/coding-new-feat/) | 开发新功能时调用。把一个模糊的功能需求按"需求分析 → 任务拆解 → 逐步实现 → 每步验证 → 集成测试"五步法拆成 5-7 个可验证的小任务，一次只做一步、做完就验，避免一把梭到底反复翻车。工具中立 |
 | [coding_fix_bug](skills/coding-fix-bug/) | 修 bug 时调用。按"收集线索 → 缩小范围 → 定位根因 → 安全修复"四步定位法，从异常现象倒推原因，给 AI 精确线索而不是让它猜，先诊断再动手、最小改动、改完防回归。覆盖 runtime error / 逻辑 bug / 类型错误 / 状态不同步等。工具中立 |
