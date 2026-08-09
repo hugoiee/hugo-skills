@@ -15,10 +15,11 @@ hugo 维护的 Claude Code / Claude.ai Skills 仓库。开箱即用，clone 下�
 | [aigc-podcast-double-writing](skills/aigc-podcast-double-writing/) | 写**双人对谈稿**时调用。用"小林说式"方法论把单人爆款技巧拆成两个声部（自问自答→A 问 B 答、替观众提问→A 的人设、虚拟对白→真实交锋、大悬念两人共同揭开），按"选题打分 → 双人设定 → 结构与悬念地图 → 逐块写台词 → 口语化"产出带 T1/T3/T4 反应镜头触发点备注的六字段 A/B 行表。行表可直接作为下游 `aigc-podcast-double-script` 的输入 |
 | [aigc-podcast-double-script](skills/aigc-podcast-double-script/) | 把**双人对话稿做成视频 + 剪辑决策表**时调用。生成双人/A 单人/B 单人三视图固定机位首帧、逐人图生视频出音画一体说话片段，把剪辑决策前置成一张精确到秒的剪辑决策表（cut plan / EDL）+ 反应镜头素材库需求清单，让剪映/CapCut 里的拼接退化成照表拼装。核心机制是"说话片段音画一体进主轨、静音反应片段进上层覆盖轨做盖画面不盖声音的 cutaway 叠加"，逐行给出起点/时长/用哪条反应片段/转场，并可选 pyJianYingDraft 一键生成剪映草稿。针对即梦/可灵/Vidu + 剪映 |
 
-### 出图 / 出歌
+### 出图 / 出歌 / 出视频
 
 | Skill | 适用场景 |
 |-------|---------|
+| [aigc-video-builder](skills/aigc-video-builder/) | 写**AI 视频生成 prompt** 时调用。为任意风格构建专业、可直接投产的英文视频 prompt——实拍电影感、3D 动画长片、3A 游戏过场、游戏实机、FPV 一镜到底、产品广告、源视频 VFX 合成、怪兽大片全覆盖。五大硬性原则（第一帧就有运动、三层景深、引用锁定、真实物理与实用光源、构建层面规避内容政策风险）+ 23 段通用结构词汇表 + 8 套风格配方。交付永远是"英文 prompt 成品块 + 逐段中文解释"双份，不是写法说明 |
 | [aigc-mj-translate](skills/aigc-mj-translate/) | 把中文创意/提示词翻译成精准、符合 Midjourney 规范的英文 prompt 时调用。按"解析意图（缺信息先反问）→ 八要素拆解 → 专业术语选词 → 智能补参数 → 成品 + 说明"五步，产出可直接出图的 prompt。内置 MJ 参数速查与中→英视觉术语词表，默认 V8.1。专用于 Midjourney |
 | [aigc-suno-translate](skills/aigc-suno-translate/) | 用 Suno 做歌时调用。把一句音乐创意/主题变成可直接粘贴进 Suno 的成品——英文 Style 提示词（≤240 字符）+ 带 [Verse]/[Chorus] 结构标签的歌词（≤3000 字符）+ 标题 + 调参建议。按"厘清意图 → 写 Style → 写结构化歌词 → 选模式/版本 → 调参迭代"五步，只锚定一个主流派避免风格打架；Style 用英文、歌词随用户语言。专用于 Suno |
 
